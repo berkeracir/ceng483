@@ -11,7 +11,7 @@ def usage():
     sys.exit(1)
 
 def grayscale_histogram(image, level, bin):
-    """ Grayscale histogram.
+    """ Grayscale histogram
     image = np.array of an image file
     level = spatial levels of an image
     bin   = number of bins in the histogram
