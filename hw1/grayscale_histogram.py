@@ -18,16 +18,16 @@ def grayscale_histogram(image, level, bin):
     """
 
     if level < 1 or level > 6:
-        sys.stderr.write("Grayscale Histogram: Level range: [1,6]")
+        sys.stderr.write("Grayscale Histogram: Level range: [1,6]\n")
         sys.exit(1)
     if bin < 1 or bin > 256:
-        sys.stderr.write("Grayscale Histogram: Bin range: [1,256]")
+        sys.stderr.write("Grayscale Histogram: Bin range: [1,256]\n")
         sys.exit(1)
 
     histogram = np.zeros((pow(2,level-1)**2, bin), dtype=int)
 
     # Convert image to grayscale
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     bin_range = 256/bin
 
@@ -72,6 +72,6 @@ if __name__ == "__main__":
     if len(sys.argv) != 2: usage()
 
     img = cv2.imread(sys.argv[1])
-    hist256 = grayscale_histogram(img, 3, 16)
+    hist256 = grayscale_histogram(img, 2, 64)
 
     plot_grayscale_histogram(hist256)

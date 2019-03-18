@@ -19,10 +19,10 @@ def color_histogram(image, level, bin):
     """
 
     if level < 1 or level > 6:
-        sys.stderr.write("3D Color Histogram: Level range: [1,6]")
+        sys.stderr.write("3D Color Histogram: Level range: [1,6]\n")
         sys.exit(1)
     if bin < 1 or bin > 256:
-        sys.stderr.write("3D Color Histogram: Bin range: [1,256]")
+        sys.stderr.write("3D Color Histogram: Bin range: [1,256]\n")
         sys.exit(1)
 
     histogram = np.zeros((pow(2,level-1)**2, bin, bin, bin), dtype=int)
@@ -87,5 +87,5 @@ if __name__ == "__main__":
 
     img = cv2.imread(sys.argv[1])
 
-    hist = color_histogram(img, 1, 4)
+    hist = color_histogram(img, 2, 4)
     plot_color_histogram(hist)
