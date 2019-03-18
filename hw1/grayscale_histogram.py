@@ -2,9 +2,7 @@ import sys
 import math
 import numpy as np
 import cv2
-from PIL import Image
 import matplotlib.pyplot as plt
-import time
 
 def usage():
     sys.stderr.write("Usage: python " + sys.argv[0] + " img.jpg\n")

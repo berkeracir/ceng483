@@ -2,10 +2,8 @@ import sys
 import math
 import numpy as np
 import cv2
-from PIL import Image
 import scipy.signal
 import matplotlib.pyplot as plt
-import time
 
 def usage():
     sys.stderr.write("Usage: python " + sys.argv[0] + " img.jpg\n")
@@ -99,7 +97,7 @@ if __name__ == "__main__":
                                 [0, 0, 0], 
                                 [-1, -2, -1]])
 
-    hist = gradient_histogram(img, vertical_kernel, horizontal_kernel, 1, 16)
+    hist = gradient_histogram(img, vertical_kernel, horizontal_kernel, 1, 72)
     plot_gradient_histogram(hist)
 
     """

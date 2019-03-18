@@ -2,10 +2,10 @@ import sys
 import math
 import numpy as np
 import cv2
-from PIL import Image
+#from PIL import Image
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import time
+#import time
 
 def usage():
     sys.stderr.write("Usage: python " + sys.argv[0] + " img.jpg\n")
