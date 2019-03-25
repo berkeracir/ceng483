@@ -82,7 +82,88 @@ def precompute_color_histograms(image):
         color_histogram = squeeze_histogram(color_histogram)
         bin = int(bin/2)
 
-#def precompute_gradient_histograms(image):
+def precompute_gradient_histograms(image):
+    img = cv2.imread(os.path.join(DATASET_PATH, image))
+    img_name = image.split(".")[0]
+    
+    h1_kernel = np.array([[-1, 0, 1], 
+                          [-1, 0, 1], 
+                          [-1, 0, 1]])
+    v1_kernel = np.array([[ 1,  1,  1], 
+                          [ 0,  0,  0], 
+                          [-1, -1, -1]])
+    
+    h2_kernel = np.array([[-1, 0, 1], 
+                          [-2, 0, 2], 
+                          [-1, 0, 1]])
+    v2_kernel = np.array([[ 1,  2,  1], 
+                          [ 0,  0,  0], 
+                          [-1, -2, -1]])
+
+    kernel_pairs = [[h1_kernel, v1_kernel], [h2_kernel, v2_kernel]]
+
+    for kernel_conf in range(len(kernel_pairs)):
+        level = 1
+
+        vertical = kernel_pairs[kernel_conf][1]
+        horizontal = kernel_pairs[kernel_conf][0]
+
+        # Bin: 360
+        bin = 360
+        gradient_histogram = grad_hist.gradient_histogram(img, vertical, horizontal, level, bin)
+
+        conf = "grad_l" + str(level) + "b" + str(bin) + "k" + str(kernel_conf)
+
+        if not os.path.exists(os.path.join(CACHE_PATH, conf)):
+            os.makedirs(os.path.join(CACHE_PATH, conf))
+        
+        np.save(os.path.join(CACHE_PATH, conf, img_name), gradient_histogram)
+
+        # Bin: 72, 36
+        bin = 72
+        gradient_histogram = grad_hist.gradient_histogram(img, vertical, horizontal, level, bin)
+
+        for i in range(2):
+            conf = "grad_l" + str(level) + "b" + str(bin) + "k" + str(kernel_conf)
+
+            if not os.path.exists(os.path.join(CACHE_PATH, conf)):
+                os.makedirs(os.path.join(CACHE_PATH, conf))
+
+            np.save(os.path.join(CACHE_PATH, conf, img_name), gradient_histogram)
+
+            gradient_histogram = squeeze_histogram(gradient_histogram)
+            bin = int(bin/2)
+
+        # Bin: 24, 12, 6
+        bin = 24
+        gradient_histogram = grad_hist.gradient_histogram(img, vertical, horizontal, level, bin)
+
+        for i in range(3):
+            conf = "grad_l" + str(level) + "b" + str(bin) + "k" + str(kernel_conf)
+
+            if not os.path.exists(os.path.join(CACHE_PATH, conf)):
+                os.makedirs(os.path.join(CACHE_PATH, conf))
+
+            np.save(os.path.join(CACHE_PATH, conf, img_name), gradient_histogram)
+
+            gradient_histogram = squeeze_histogram(gradient_histogram)
+            bin = int(bin/2)
+
+        # Bin: 4, 2, 1
+        bin = 4
+        gradient_histogram = grad_hist.gradient_histogram(img, vertical, horizontal, level, bin)
+
+        for i in range(3):
+            conf = "grad_l" + str(level) + "b" + str(bin) + "k" + str(kernel_conf)
+
+            if not os.path.exists(os.path.join(CACHE_PATH, conf)):
+                os.makedirs(os.path.join(CACHE_PATH, conf))
+
+            np.save(os.path.join(CACHE_PATH, conf, img_name), gradient_histogram)
+
+            gradient_histogram = squeeze_histogram(gradient_histogram)
+            bin = int(bin/2)
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2: usage()
@@ -104,7 +185,7 @@ if __name__ == "__main__":
 
     for image in dataset_images:
         #precompute_grayscale_histograms(image) # DONE
-        precompute_color_histograms(image)
-        #precompute_gradient_histograms(image)
+        #precompute_color_histograms(image) # DONE
+        precompute_gradient_histograms(image)
 
         
