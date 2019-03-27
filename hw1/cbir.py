@@ -191,6 +191,7 @@ if __name__ == "__main__":
                     f.write("\n")
     """
 
+    """
     grad_levels = [1]
     grad_bin_conf = [360, 72, 36, 24, 12, 6, 4, 2, 1]
     grad_kernel_conf = [0, 1]
@@ -223,7 +224,7 @@ if __name__ == "__main__":
                                 cache[query_image] = qhist
                             except FileNotFoundError:
                                 qimg = cv2.imread(os.path.join(DATASET_PATH, query_image))
-                                qhist = color_hist.color_histogram(qimg, level, bin)
+                                qhist = color_hist.color_histogram(qimg, level, bin) # TODO
                                 np.save(os.path.join(CACHE_PATH, conf, qimg_name), qhist)
                                 cache[query_image] = qhist
 
@@ -250,5 +251,180 @@ if __name__ == "__main__":
 
                         f.write(query_image + ":")
                         for pair in sorted_dist_vector:
-                            f.write(" " + str(pair[0]) + " " + pair[1])
+                        f.write(" " + str(pair[0]) + " " + pair[1])
                         f.write("\n")
+    """
+
+    levels = [2, 3]
+    bin = 16
+
+    for level in levels:
+        conf = "gray_l" + str(level) + "b" + str(bin)
+
+        if not os.path.exists(os.path.join(CACHE_PATH, conf)):
+            os.path.makedirs(os.path.join(CACHE_PATH, conf))
+
+        fname = conf + ".txt"
+        cache = {}
+
+        with open(os.path.join(OUTPUT_PATH, fname), "w") as f:
+            for query_image in query_images:
+                print(query_image)
+                dist_vector = []
+
+                qimg_name = query_image.split(".")[0]
+
+                if query_image in cache:
+                    qhist = cache[query_image]
+                else:
+                    try:
+                        qhist = np.load(os.path.join(CACHE_PATH, conf,
+                                                        qimg_name + ".npy"))
+                        cache[query_image] = qhist
+                    except FileNotFoundError:
+                        qimg = cv2.imread(os.path.join(DATASET_PATH, query_image))
+                        qhist = gray_hist.grayscale_histogram(qimg, level, bin)
+                        np.save(os.path.join(CACHE_PATH, conf, qimg_name), qhist)
+                        cache[query_image] = qhist
+
+                for image in dataset_images:
+                    img_name = image.split(".")[0]
+
+                    if image in cache:
+                        hist = cache[image]
+                    else:
+                        try:
+                            hist = np.load(os.path.join(CACHE_PATH, conf,
+                                                            img_name + ".npy"))
+                            cache[image] = hist
+                        except FileNotFoundError:
+                            img = cv2.imread(os.path.join(DATASET_PATH, image))
+                            hist = gray_hist.grayscale_histogram(img, level, bin)
+                            np.save(os.path.join(CACHE_PATH, conf, img_name), hist)
+                            cache[image] = hist
+
+                    dist = euclidean_distance(qhist, hist)
+                    dist_vector.append((dist, image))
+
+                sorted_dist_vector = sorted(dist_vector, key=lambda x: x[0])
+
+                f.write(query_image + ":")
+                for pair in sorted_dist_vector:
+                    f.write(" " + str(pair[0]) + " " + pair[1])
+                f.write("\n")
+
+    for level in levels:
+        conf = "color_l" + str(level) + "b" + str(bin)
+
+        if not os.path.exists(os.path.join(CACHE_PATH, conf)):
+            os.path.makedirs(os.path.join(CACHE_PATH, conf))
+
+        fname = conf + ".txt"
+        cache = {}
+
+        with open(os.path.join(OUTPUT_PATH, fname), "w") as f:
+            for query_image in query_images:
+                print(query_image)
+                dist_vector = []
+
+                qimg_name = query_image.split(".")[0]
+
+                if query_image in cache:
+                    qhist = cache[query_image]
+                else:
+                    try:
+                        qhist = np.load(os.path.join(CACHE_PATH, conf,
+                                                        qimg_name + ".npy"))
+                        cache[query_image] = qhist
+                    except FileNotFoundError:
+                        qimg = cv2.imread(os.path.join(DATASET_PATH, query_image))
+                        qhist = color_hist.color_histogram(qimg, level, bin)
+                        np.save(os.path.join(CACHE_PATH, conf, qimg_name), qhist)
+                        cache[query_image] = qhist
+
+                for image in dataset_images:
+                    img_name = image.split(".")[0]
+
+                    if image in cache:
+                        hist = cache[image]
+                    else:
+                        try:
+                            hist = np.load(os.path.join(CACHE_PATH, conf,
+                                                            img_name + ".npy"))
+                            cache[image] = hist
+                        except FileNotFoundError:
+                            img = cv2.imread(os.path.join(DATASET_PATH, image))
+                            hist = color_hist.color_histogram(img, level, bin)
+                            np.save(os.path.join(CACHE_PATH, conf, img_name), hist)
+                            cache[image] = hist
+
+                    dist = euclidean_distance(qhist, hist)
+                    dist_vector.append((dist, image))
+
+                sorted_dist_vector = sorted(dist_vector, key=lambda x: x[0])
+
+                f.write(query_image + ":")
+                for pair in sorted_dist_vector:
+                    f.write(" " + str(pair[0]) + " " + pair[1])
+                f.write("\n")
+
+    bin = 360
+
+    for level in levels:
+        conf = "grad_l" + str(level) + "b" + str(bin) + "k1"
+
+        if not os.path.exists(os.path.join(CACHE_PATH, conf)):
+            os.path.makedirs(os.path.join(CACHE_PATH, conf))
+
+        fname = conf + ".txt"
+        cache = {}
+
+        with open(os.path.join(OUTPUT_PATH, fname), "w") as f:
+            for query_image in query_images:
+                print(query_image)
+                dist_vector = []
+
+                qimg_name = query_image.split(".")[0]
+
+                if query_image in cache:
+                    qhist = cache[query_image]
+                else:
+                    try:
+                        qhist = np.load(os.path.join(CACHE_PATH, conf,
+                                                        qimg_name + ".npy"))
+                        cache[query_image] = qhist
+                    except FileNotFoundError:
+                        print("ERR")
+                        exit(1)
+                        #qimg = cv2.imread(os.path.join(DATASET_PATH, query_image))
+                        #qhist = color_hist.color_histogram(qimg, level, bin)
+                        #np.save(os.path.join(CACHE_PATH, conf, qimg_name), qhist)
+                        #cache[query_image] = qhist
+
+                for image in dataset_images:
+                    img_name = image.split(".")[0]
+
+                    if image in cache:
+                        hist = cache[image]
+                    else:
+                        try:
+                            hist = np.load(os.path.join(CACHE_PATH, conf,
+                                                            img_name + ".npy"))
+                            cache[image] = hist
+                        except FileNotFoundError:
+                            print("ERR")
+                            exit(1)
+                            #img = cv2.imread(os.path.join(DATASET_PATH, image))
+                            #hist = color_hist.color_histogram(img, level, bin)
+                            #np.save(os.path.join(CACHE_PATH, conf, img_name), hist)
+                            #cache[image] = hist
+
+                    dist = euclidean_distance(qhist, hist)
+                    dist_vector.append((dist, image))
+
+                sorted_dist_vector = sorted(dist_vector, key=lambda x: x[0])
+
+                f.write(query_image + ":")
+                for pair in sorted_dist_vector:
+                    f.write(" " + str(pair[0]) + " " + pair[1])
+                f.write("\n")

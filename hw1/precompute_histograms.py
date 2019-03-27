@@ -186,6 +186,54 @@ if __name__ == "__main__":
     for image in dataset_images:
         #precompute_grayscale_histograms(image) # DONE
         #precompute_color_histograms(image) # DONE
-        precompute_gradient_histograms(image)
+        #precompute_gradient_histograms(image) # DONE
+        print(image)
+        img = cv2.imread(os.path.join(DATASET_PATH, image))
+        img_name = image.split(".")[0]
+
+        level = [2, 3]
+        bin = 16
+
+        for i in level:
+            conf = "gray_l" + str(i) + "b" + str(bin)
+
+            gray_histogram = gray_hist.grayscale_histogram(img, i, bin)
+
+            if not os.path.exists(os.path.join(CACHE_PATH, conf)):
+                os.makedirs(os.path.join(CACHE_PATH, conf))
+
+            np.save(os.path.join(CACHE_PATH, conf, img_name), gray_histogram)
+
+        bin = 16
+
+        for i in level:
+            conf = "color_l" + str(i) + "b" + str(bin)
+
+            color_histogram = color_hist.color_histogram(img, i, bin)
+
+            if not os.path.exists(os.path.join(CACHE_PATH, conf)):
+                os.makedirs(os.path.join(CACHE_PATH, conf))
+
+            np.save(os.path.join(CACHE_PATH, conf, img_name), color_histogram)
+
+        bin = 360
+
+        h_kernel = np.array([[-1, 0, 1], 
+                             [-2, 0, 2], 
+                             [-1, 0, 1]])
+        v_kernel = np.array([[ 1,  2,  1], 
+                             [ 0,  0,  0], 
+                             [-1, -2, -1]])
+
+
+        for i in level:
+            conf = "grad_l" + str(i) + "b" + str(bin) + "k1"
+        
+            gradient_histogram = grad_hist.gradient_histogram(img, v_kernel, h_kernel, i, bin)
+
+            if not os.path.exists(os.path.join(CACHE_PATH, conf)):
+                os.makedirs(os.path.join(CACHE_PATH, conf))
+
+            np.save(os.path.join(CACHE_PATH, conf, img_name), gradient_histogram)
 
         

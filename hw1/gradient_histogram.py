@@ -27,10 +27,10 @@ def gradient_histogram(image, vertical_filter, horizontal_filter, level, bin):
     """
 
     if level < 1 or level > 6:
-        sys.stderr.write("Grayscale Histogram: Level range: [1,6]\n")
+        sys.stderr.write("Gradient Histogram: Level range: [1,6]\n")
         sys.exit(1)
     if bin < 1 or bin > 360:
-        sys.stderr.write("Grayscale Histogram: Bin range: [1,360]\n")
+        sys.stderr.write("Gradient Histogram: Bin range: [1,360]\n")
         sys.exit(1)
 
     histogram = np.zeros((pow(2,level-1)**2, bin))
