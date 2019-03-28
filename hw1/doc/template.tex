@@ -133,7 +133,7 @@ I evaluated the given queries with the dataset by using grayscale histogram with
 	\end{minipage}
 \end{minipage}
 
-It was obvious that lower quantization levels such as 1, 2, 4 would have low mAP as
+It is obvious that lower quantization levels such as 1, 2, 4 have low mAP as each bin corresponds to large interval of grayscaled value, and this doens't result in distinguishing the differences in different images.
 
 \section{3D RGB Histogram}
 In this section, give your results only for grid level 1.
@@ -283,7 +283,7 @@ Give your mAP for all of the configurations below.
 		\begin{tikzpicture}
 		    \begin{axis}
 		        [
-		        ,xlabel=Feature (Bin Count)
+		        ,xlabel=Feature
 		        ,ylabel=Mean Average Precision
 		        ,ybar
 		        ,bar width=0.35
@@ -330,7 +330,7 @@ Give your mAP for all of the configurations below.
 		\begin{tikzpicture}
 		    \begin{axis}
 		        [
-		        ,xlabel=Feature (Bin Count)
+		        ,xlabel=Feature
 		        ,ylabel=Mean Average Precision
 		        ,ybar
 		        ,bar width=0.35
@@ -377,7 +377,7 @@ Give your mAP for all of the configurations below.
 		\begin{tikzpicture}
 		    \begin{axis}
 		        [
-		        ,xlabel=Feature (Bin Count)
+		        ,xlabel=Feature
 		        ,ylabel=Mean Average Precision
 		        ,ybar
 		        ,bar width=0.35
