@@ -90,15 +90,15 @@ if __name__ == "__main__":
 
     img = cv2.imread(sys.argv[1])
     horizontal_kernel = np.array([[-1, 0, 1], 
-                                  [-2, 0, 2], 
+                                  [-1, 0, 1], 
                                   [-1, 0, 1]])
 
-    vertical_kernel = np.array([[1, 2, 1], 
+    vertical_kernel = np.array([[1, 1, 1], 
                                 [0, 0, 0], 
-                                [-1, -2, -1]])
+                                [-1, -1, -1]])
 
-    hist = gradient_histogram(img, vertical_kernel, horizontal_kernel, 1, 72)
-    plot_gradient_histogram(hist)
+    """hist = gradient_histogram(img, vertical_kernel, horizontal_kernel, 1, 72)
+    plot_gradient_histogram(hist)"""
 
     """
     kernel_v2 = np.array([[2, 1, 0, -1, -2], 
@@ -113,3 +113,13 @@ if __name__ == "__main__":
                           [-1, -1, -2, -1, -1],
                           [-2, -2, -4, -2, -2]])
     """
+
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    vertical = scipy.signal.convolve2d(gray, vertical_kernel, 
+                                      mode='same', boundary='fill', fillvalue=0)
+    horizontal = scipy.signal.convolve2d(gray, horizontal_kernel, 
+                                      mode='same', boundary='fill', fillvalue=0)
+
+    cv2.imwrite(str(sys.argv[1].split("/")[1]) + "_vertical-0.jpeg", vertical)
+    cv2.imwrite(str(sys.argv[1].split("/")[1]) + "_horizontal-0.jpeg", horizontal)
+    cv2.imwrite(str(sys.argv[1].split("/")[1]) + "_blended-0.jpeg", (vertical+horizontal)/2)
