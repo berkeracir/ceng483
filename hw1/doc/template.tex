@@ -203,7 +203,7 @@ In this section, give your results only for grid level 1.
 
 \begin{minipage}{\textwidth}
 	\begin{minipage}{0.49\textwidth}
-	\[\text{Horizontal-Filter-1: }
+	\[\text{Horizontal-Filter-0: }
 	\begin{bmatrix}
 	    -1 & 0 & 1 \\
 	    -1 & 0 & 1 \\
@@ -274,7 +274,7 @@ In this section, give your results only for grid level 1.
 		        ,xlabel=Quantization Level
 		        ,ylabel=Mean Average Precision
 		        ,yticklabel style={/pgf/number format/fixed}
-		        ,xtick=data,
+		        ,xtick=data
 		        ,xticklabels={2, 4, 6, 12, 24, 36, 72, 360}
 		        ,legend style={at={(0.98 ,0.02)},anchor=south east}
 		        ]
@@ -333,19 +333,13 @@ In this section, give your results only for grid level 1.
 	\end{minipage}
 \end{minipage}
 
-\newpage
-\textbf{Before starting the next section, please pick up the best configuration for three properties above and continue with them.}
+%\newpage
+%\textbf{Before starting the next section, please pick up the best configuration for three properties above and continue with them.}
 
 \section{Grid Based Feature Extraction}
-Give your mAP for all of the configurations below.
+%Give your mAP for all of the configurations below.
 
 \subsection{level 1}
-\begin{itemize}
-\item grayscale histogram:
-\item 3d rgb histogram:
-\item gradient histogram:
-\end{itemize}
-
 \begin{minipage}{\textwidth}
 	\begin{minipage}{0.49\textwidth}
 		\centering
@@ -355,7 +349,9 @@ Give your mAP for all of the configurations below.
 		        ,xlabel=Feature
 		        ,ylabel=Mean Average Precision
 		        ,ybar
-		        ,bar width=0.35
+		        ,bar width=0.6
+		        ,xmin=-0.5,xmax=2.5
+		        ,ymin=0
 		        ,yticklabel style={/pgf/number format/fixed}
 		        ,xtick=data,
 		        ,xticklabels={Grayscale, 3D RGB, Gradient}
@@ -387,12 +383,6 @@ Give your mAP for all of the configurations below.
 \end{minipage}
 
 \subsection{level 2}
-\begin{itemize}
-\item grayscale histogram:
-\item 3d rgb histogram:
-\item gradient histogram:
-\end{itemize}
-
 \begin{minipage}{\textwidth}
 	\begin{minipage}{0.49\textwidth}
 		\centering
@@ -402,7 +392,9 @@ Give your mAP for all of the configurations below.
 		        ,xlabel=Feature
 		        ,ylabel=Mean Average Precision
 		        ,ybar
-		        ,bar width=0.35
+		        ,bar width=0.6
+		        ,xmin=-0.5,xmax=2.5
+		        ,ymin=0
 		        ,yticklabel style={/pgf/number format/fixed}
 		        ,xtick=data,
 		        ,xticklabels={Grayscale, 3D RGB, Gradient}
@@ -434,12 +426,6 @@ Give your mAP for all of the configurations below.
 \end{minipage}
 
 \subsection{level 3}
-\begin{itemize}
-\item grayscale histogram:
-\item 3d rgb histogram:
-\item gradient histogram:
-\end{itemize}
-
 \begin{minipage}{\textwidth}
 	\begin{minipage}{0.49\textwidth}
 		\centering
@@ -449,7 +435,9 @@ Give your mAP for all of the configurations below.
 		        ,xlabel=Feature
 		        ,ylabel=Mean Average Precision
 		        ,ybar
-		        ,bar width=0.35
+		        ,bar width=0.6
+		        ,xmin=-0.5,xmax=2.5
+		        ,ymin=0
 		        ,yticklabel style={/pgf/number format/fixed}
 		        ,xtick=data,
 		        ,xticklabels={Grayscale, 3D RGB, Gradient}
@@ -480,6 +468,12 @@ Give your mAP for all of the configurations below.
 	\end{minipage}
 \end{minipage}
 
+\subsection{questions}
+\begin{itemize}
+\item What do you think cause the difference between the results?
+\item How did you combine the histograms in level 2 and 3? What would you think the difference between to simply sum them and to concatenate them?
+\end{itemize}
+
 \begin{minipage}{\textwidth}
 	\begin{minipage}{0.49\textwidth}
 		\centering
@@ -509,7 +503,7 @@ Give your mAP for all of the configurations below.
 		    \end{axis}
 		\end{tikzpicture}
 		\captionsetup{width=.9\textwidth}
-		\captionof{figure}{Mean Average Precision comparision among different features in different grid levels with level 1 best configurations}
+		\captionof{figure}{Mean Average Precision comparison among different features in different grid levels with level 1 best configurations}
 	 \end{minipage}
 	 \hfill
 	\begin{minipage}{0.49\textwidth}
@@ -538,15 +532,9 @@ Give your mAP for all of the configurations below.
 		   	\hline
 		\end{tabular}
 		\captionsetup{width=.8\textwidth}
-		\captionof{table}{Mean Average Precision comparision table of different features with different grid levels with their level 1 best configurations}
+		\captionof{table}{Mean Average Precision comparison table of different features with feature's best level 1 configuration and with different grid levels}
 	\end{minipage}
 \end{minipage}
-
-\subsection{questions}
-\begin{itemize}
-\item What do you think cause the difference between the results?
-\item How did you combine the histograms in level 2 and 3? What would you think the difference between to simply sum them and to concatenate them?
-\end{itemize}
 
 \section{Your Best Configuration}
 \begin{itemize}
