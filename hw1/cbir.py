@@ -77,10 +77,12 @@ if __name__ == "__main__":
     DATASET_FILE = sys.argv[5]
     DATASET_PATH = sys.argv[6]
 
-    print("Feature:", FEATURE, "Level:", LEVEL, "Bin:", BIN)
+    print("Feature:", FEATURE)
+    print("Level:", LEVEL)
+    print("Bin:", BIN)
     print("Query File:", QUERY_FILE)
     print("Dataset File:", DATASET_FILE)
-    print("Dataset:", DATASET_PATH)
+    print("Dataset Path:", DATASET_PATH)
 
     if not os.path.exists(DATASET_PATH):
         sys.stderr.write("Dataset folder does not exist \""
@@ -89,9 +91,6 @@ if __name__ == "__main__":
 
     if not os.path.exists(OUTPUT_PATH):
         os.makedirs(OUTPUT_PATH)
-
-    if not os.path.exists(CACHE_PATH):
-        caching = True
 
     query_images = []
     dataset_images = []
@@ -107,6 +106,7 @@ if __name__ == "__main__":
             dataset_images.append(img_name)
 
     cache = {}
+    caching = False
 
     if FEATURE == "grad":
         conf = FEATURE + "_l" + str(LEVEL) + "b" + str(BIN) + "k1"

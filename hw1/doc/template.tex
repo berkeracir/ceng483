@@ -23,6 +23,9 @@
 \pgfplotsset{width=8cm,compat=1.9}
 \usepackage{multirow}
 \usepackage{graphicx}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{float}
 \graphicspath{ {./images/} }
 \topmargin=-1.8cm
 \addtolength{\textheight}{6.5cm}
@@ -76,17 +79,8 @@
 \begin{center}
 \end{center}
 \vspace{-10mm}
-\noindent\\ \\ 
-Please fill in the sections below only with the requested information. If you have additional things you want the mention, you can use the last section. Please note that all of the results in this report should be given for the \textbf{validation set}.
 \section{Grayscale Histogram}
-In this section, give your results only for grid level 1.
-
-\begin{itemize}
-\item Pick 5 different quantization levels and give your mAP results for each of them.
-\item What do you think caused the difference between mAP for these?
-\end{itemize}
-
-I evaluated the given queries with the dataset by using grayscale histogram with 8 different quantization levels (i.e. bin counts) for grid level 1. Mean Average Precisions (mAP) of each quantization level are below:
+\qquad I evaluated the given queries with the dataset by using grayscale histogram with 8 different quantization levels (i.e. bin counts) for grid level 1. Mean Average Precisions (mAP) of each quantization level are below: \\
 
 \begin{minipage}{\textwidth}
 	\begin{minipage}{0.49\textwidth}
@@ -134,17 +128,12 @@ I evaluated the given queries with the dataset by using grayscale histogram with
 		\captionsetup{width=.8\textwidth}
 		\captionof{table}{Mean Average Precision with different quantization levels for grid level 1 grayscale histogram}
 	\end{minipage}
-\end{minipage}
+\end{minipage} \\
 
-It is obvious that lower quantization levels such as 1, 2, 4 have lower mAP as each bin corresponds to large interval of grayscaled value, and this doens't result in distinguishing the differences in different images. I've expected same result with large number of bin count such as 256; however, 256 bin count has slight difference with the best configuration in this part. 256 bin count's mAP is 0.17693 whereas the best configuration which is 16 bin count's mAP is 0.18619.
+\qquad It is obvious that lower quantization levels such as 1, 2, 4 have lower mAP as each bin corresponds to large interval of grayscaled value, and this doens't result in distinguishing the differences in different images. I've expected same result with large number of bin count such as 256; however, 256 bin count has slight difference with the best configuration in this part. 256 bin count's mAP is 0.17693 whereas the best configuration which is 16 bin count's mAP is 0.18619. I've concluded that large interval for grayscale bins affect the Mean Average Precision most. The best configuration in grayscale histogram for grid level 1 is quantization level 16.
 
 \section{3D RGB Histogram}
-In this section, give your results only for grid level 1.
-
-\begin{itemize}
-\item Pick 5 different quantization levels and give your mAP results for each of them.
-\item What do you think caused the difference between mAP for these?
-\end{itemize}
+\qquad I evaluated the given queries with the given dataset by using 3D RGB histogram with 6 different quantization levels (i.e. bin counts) for grid level 1. Mean Average Precisions (mAP) of each quantization level are below: \\
 
 \begin{minipage}{\textwidth}
 	\begin{minipage}{0.49\textwidth}
@@ -188,18 +177,28 @@ In this section, give your results only for grid level 1.
 		\captionsetup{width=.8\textwidth}
 		\captionof{table}{Mean Average Precision with different quantization levels for grid level 1 gradient histogram}
 	\end{minipage}
-\end{minipage}
+\end{minipage} \\
+
+\qquad As it is in the grayscale histograms, lower bin count such as 2 has the lowest mAP precision due to its insufficient distribution in 3D color histogram. However, in this case, higher bin count such as 64 has lower mAP because it has $64^{3}$ bin which is unnecessarily many. The best configuration in 3D RGB histogram for grid level 1 is quantization level 16.
 
 \section{Gradient Histogram}
+\qquad Gradient histograms are obtained from images' edge map. Image gradient is obtained from applying vertical and horizontal filters (orthogonal derivatives) to the grayscaled image. I simply applied orthogonal derivatives to the image, and obtained orientation($\theta$) and magnitude($a$) of a pixel at coordinates $i$ and $j$ as, where $v$ and $h$ are the filtered images with respect to orthogonal derivatives:
 
-\begin{itemize}
-\item Which method did you use for obtaining the gradients? Explain the steps of the method briefly.
-\item Visualize some of your intermediate results (filtered versions of the image).
-\item Pick 3 different quantization levels for your histogram and give your mAP results for each of them.
-\item What do you think caused the difference between mAP for these?
-\end{itemize}
+\begin{minipage}{\textwidth}
+	\centering
+	\begin{minipage}{0.25\textwidth}
+		\begin{equation}
+		\theta_{ij}=arctan(v_{ij}/h_{ij})
+		\end{equation}
+	\end{minipage}
+	\begin{minipage}{0.25\textwidth}
+		\begin{equation}
+		a_{ij}=\sqrt{v^{2}_{ij}+h^{2}_{ij}}
+		\end{equation}
+	\end{minipage}
+\end{minipage} \\
 
-
+\quad I tried two different derivative filters. Filter-0 is basic derivative filter and Filter-1 is Sobel filter. Derivative filter's can be seen below: \\
 
 \begin{minipage}{\textwidth}
 	\begin{minipage}{0.49\textwidth}
@@ -240,30 +239,36 @@ In this section, give your results only for grid level 1.
 	\end{minipage}
 \end{minipage}
 
+\pagebreak
+
+\qquad\textbf{Intermediate results:}
+
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.49\textwidth]{IAcBBqAmEI.jpg}
-	\caption{Example image from the dataset}
+	\includegraphics[width=0.4\textwidth]{IAcBBqAmEI.jpg}
+	\includegraphics[width=0.4\textwidth]{IAcBBqAmEI_gray.jpg}
+	\caption{An image and its grayscale from the dataset}
 \end{figure}
 
 \begin{minipage}{\textwidth}
-	\begin{minipage}{0.49\textwidth}
-		\centering
-		\includegraphics[width=0.8\textwidth]{IAcBBqAmEI_horizontal-0.jpeg}
-		\includegraphics[width=0.8\textwidth]{IAcBBqAmEI_vertical-0.jpeg}
-		\includegraphics[width=0.8\textwidth]{IAcBBqAmEI_blended-0.jpeg}
-		\captionsetup{width=.8\textwidth}
-		\captionof{figure}{Horizontally, vertically filtered images and their blend, Filter-0}
-	\end{minipage}
-	\begin{minipage}{0.49\textwidth}
-		\centering
-		\includegraphics[width=0.8\textwidth]{IAcBBqAmEI_horizontal-1.jpeg}
-		\includegraphics[width=0.8\textwidth]{IAcBBqAmEI_vertical-1.jpeg}
-		\includegraphics[width=0.8\textwidth]{IAcBBqAmEI_blended-1.jpeg}
-		\captionsetup{width=.8\textwidth}
-		\captionof{figure}{Horizontally, vertically filtered images and their blend, Filter-1}
-	\end{minipage}
+	\centering
+	\includegraphics[width=0.3\textwidth]{IAcBBqAmEI_horizontal-0.jpeg}
+	\includegraphics[width=0.3\textwidth]{IAcBBqAmEI_vertical-0.jpeg}
+	\includegraphics[width=0.3\textwidth]{IAcBBqAmEI_blended-0.jpeg}
+	\captionsetup{width=.8\textwidth}
+	\captionof{figure}{Horizontally, vertically filtered images and their blend, Filter-0}
 \end{minipage}
+
+\begin{minipage}{\textwidth}
+	\centering
+	\includegraphics[width=0.3\textwidth]{IAcBBqAmEI_horizontal-1.jpeg}
+	\includegraphics[width=0.3\textwidth]{IAcBBqAmEI_vertical-1.jpeg}
+	\includegraphics[width=0.3\textwidth]{IAcBBqAmEI_blended-1.jpeg}
+	\captionsetup{width=.8\textwidth}
+	\captionof{figure}{Horizontally, vertically filtered images and their blend, Filter-1}
+\end{minipage} \\
+
+\qquad I evaluated the given queries with the given dataset by using gradient histogram with 8 different quantization levels (i.e. bin counts) and 2 different orthogonal derivatives for grid level 1. Mean Average Precisions (mAP) of each quantization level and filter are below: \\
 
 \begin{minipage}{\textwidth}
 	\begin{minipage}{0.49\textwidth}
@@ -331,15 +336,12 @@ In this section, give your results only for grid level 1.
 		\captionsetup{width=.8\textwidth}
 		\captionof{table}{Mean Average Precision with different quantization levels and filters for grid level 1 gradient histogram}
 	\end{minipage}
-\end{minipage}
+\end{minipage} \\
 
-%\newpage
-%\textbf{Before starting the next section, please pick up the best configuration for three properties above and continue with them.}
+\qquad Gradient histogram has different attitude from grayscale and 3D RGB histograms. Mean Average Precision is increased as the quantization level increased; however, this isn't the case in other histograms. From the mAP results, both filters have similar results. The best configuration in gradient histogram for grid level 1 is quantization level 360 with Sobel filter (Filter-1).
 
 \section{Grid Based Feature Extraction}
-%Give your mAP for all of the configurations below.
-
-\subsection{level 1}
+\subsection{Level 1}
 \begin{minipage}{\textwidth}
 	\begin{minipage}{0.49\textwidth}
 		\centering
@@ -382,7 +384,7 @@ In this section, give your results only for grid level 1.
 	\end{minipage}
 \end{minipage}
 
-\subsection{level 2}
+\subsection{Level 2}
 \begin{minipage}{\textwidth}
 	\begin{minipage}{0.49\textwidth}
 		\centering
@@ -425,7 +427,7 @@ In this section, give your results only for grid level 1.
 	\end{minipage}
 \end{minipage}
 
-\subsection{level 3}
+\subsection{Level 3}
 \begin{minipage}{\textwidth}
 	\begin{minipage}{0.49\textwidth}
 		\centering
@@ -468,11 +470,8 @@ In this section, give your results only for grid level 1.
 	\end{minipage}
 \end{minipage}
 
-\subsection{questions}
-\begin{itemize}
-\item What do you think cause the difference between the results?
-\item How did you combine the histograms in level 2 and 3? What would you think the difference between to simply sum them and to concatenate them?
-\end{itemize}
+\subsection{Questions}
+\qquad Differences between grid level in the same feature show variations. For example in grayscale histogram, mAP has increased significantly as grid level changed from 1 to 2. In 3D RGB histogram, mAP has decreased as grid level increased. Gradient histogram has also different distribution when grid level increased. Features have different behaviour when the histogram is applied to local regions. These can be observed from the graph and table below: \\
 
 \begin{minipage}{\textwidth}
 	\begin{minipage}{0.49\textwidth}
@@ -534,28 +533,78 @@ In this section, give your results only for grid level 1.
 		\captionsetup{width=.8\textwidth}
 		\captionof{table}{Mean Average Precision comparison table of different features with feature's best level 1 configuration and with different grid levels}
 	\end{minipage}
-\end{minipage}
+\end{minipage} \\
+
+\qquad I concatenated the histograms in grid level 2 and 3. If I simply summed the histograms, I would have similar histogram as in grid level 1. Therefore, concatenating the histograms prevents this.
 
 \section{Your Best Configuration}
 \begin{itemize}
 \item You may try different combinations including changing parameters above and even combining different methods. Simply give your best mAP for the validation set:
 
+\item[{$\circ$}] I have tried different quantization levels, grid levels, and filters in gradient histograms. My best mAP for the validation set is \textbf{$0.38512$}.
 
 \item Explain your setup for this best mAP. How can we reproduce your result using your code?
 
-\item Give some visual ranking results:
+\item[{$\circ$}] My best configuration setup is \textbf{3D RGB Histogram} with \textbf{quantization level 16} in \textbf{grid level 1}. And the result can be reproduced by, it outputs the file into $./out$ folder: \\
+
+\begin{lstlisting}
+	python3 cbir.py color 1 16 <QUERY_FILE> <IMAGES_FILE> <DATASET_PATH>
+\end{lstlisting}
+
+
+
+\item \textbf{Visual Ranking Results:}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\textwidth]{eSkXTjAGVt.jpg}
+	\caption{Given query image}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.24\textwidth]{hvUYrvNcps.jpg}
+	\includegraphics[width=0.24\textwidth]{qRsMWVmGMO.jpg}
+	\includegraphics[width=0.24\textwidth]{fwemBvAkmG.jpg}
+	\includegraphics[width=0.24\textwidth]{ghhWOLnrEn.jpg}
+	\caption{Expected query result images}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.24\textwidth]{hvUYrvNcps.jpg}
+	\includegraphics[width=0.24\textwidth]{qRsMWVmGMO.jpg}
+	\includegraphics[width=0.24\textwidth]{VhIqjAUdMe.jpg}
+	\includegraphics[width=0.24\textwidth]{FZRgQsGBCM.jpg}
+	\caption{First four result images from the best 3D RGB configuration}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{.4\textwidth}
+		\includegraphics[width=\textwidth]{gvrFChgrkm.jpg}
+		\captionof{figure}{Given query image}
+	\end{minipage}
+	\begin{minipage}{.4\textwidth}
+		\includegraphics[width=\textwidth]{DqBHrGnVao.jpg}
+		\captionof{figure}{Expected query result image}
+	\end{minipage}
+	\includegraphics[width=0.24\textwidth]{KnZcwwndxw.jpg}
+	\includegraphics[width=0.24\textwidth]{aNyQMsbMWG.jpg}
+	\includegraphics[width=0.24\textwidth]{enCvQAhATZ.jpg}
+	\includegraphics[width=0.24\textwidth]{mxtfQvfpQF.jpg}
+	\caption{First four result images from the best 3D RGB configuration}
+\end{figure}
 
 \item Explain mean average precision in your own words:
+
+\item[{$\circ$}] mAP is calculated by Euclidean Distances between histograms of query images and dataset images. In output, we have list of distances per query image and it gets higher mAP if the similar images have smaller distance to the query image than the other images. Therefore, smaller the Euclidean Distance means similar image in most cases.
 \end{itemize}
 
 \section{Additional Comments and References}
+\qquad Even though 3D RGB Histogram has the highest mAP score, it is not completely reliable as it can be seen in Figure 14, 15 and 16. We will have different feature with different configurations for best mAP score. For example, 3D RGB Color Histogram would be better in undersea images whereas Gradient Histogram would perform better in city or building images. These configurations change from image to image; therefore, my best configuration won't probably work best in some cases. Some methods might be implemented where we can make use of those three features altogether.
 
-(if there any)
-
-
-
-
-
+\qquad My code was unfortunately working slow when calculating histograms. I precomputed all histograms in 1-2 nights, and used those precalculated Numpy arrays. In addition, I hadn't utilized the using of those array at first. Then, I started to put those arrays in memory for each image in the dataset and the outputting part has got fasten. Yet, it still works slow if there isn't any cached data. I've experienced the importance of libraries such as \textit{cv2.calcHist()} etc.
 \end{document}
 
 
