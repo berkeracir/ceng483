@@ -11,7 +11,7 @@ import pickle
 
 from collections import Counter
 
-import confusion_matrix as cm
+import feature_extractor as fe
 
 def predict(train_images, indices):
     classes = []
@@ -26,7 +26,7 @@ def predict(train_images, indices):
 
 if __name__ == "__main__":
     if len(sys.argv) < 5:
-        sys.stderr.write("Wrong usage: " + sys.argv[0] + " <PATH_TO_DATASET> <K-MEANS> <STEP_SIZE> <kNN>\n")
+        sys.stderr.write("Wrong usage: " + sys.argv[0] + " <PATH_TO_DATASET> <PATH_TO_TEST_IMAGES> <K-MEANS> <STEP_SIZE> <kNN>\n")
         sys.exit(1)
     if not os.path.exists(sys.argv[1]):
         sys.stderr.write("Wrong path to dataset: " + sys.argv[1]
@@ -34,15 +34,17 @@ if __name__ == "__main__":
         sys.exit(1)
 
     DATASET = sys.argv[1]
+    TEST_IMAGES = sys.argv[2]
     TRAIN_DATASET = os.path.join(DATASET, "train")
     VAL_DATASET = os.path.join(DATASET, "validation")
     CLASS_NAMES = []
     TRAIN_IMAGE_PATHS = []
     VAL_IMAGE_PATHS = []
+    TEST_IMAGE_PATHS = []
     CACHE = "cache"
-    k_means = int(sys.argv[2])
-    step_size = int(sys.argv[3])
-    knn = int(sys.argv[4])
+    k_means = int(sys.argv[3])
+    step_size = int(sys.argv[4])
+    knn = int(sys.argv[5])
 
     if not os.path.exists(CACHE):
         os.makedirs(CACHE)
@@ -57,8 +59,10 @@ if __name__ == "__main__":
     for path in [os.path.join(VAL_DATASET, class_name, "*") for class_name in CLASS_NAMES]:
         for img_path in glob.glob(path):
             VAL_IMAGE_PATHS.append(img_path)
-    
-    
+
+    for img_path in glob.glob(os.path.join(TEST_IMAGES,  "*")):
+        TEST_IMAGE_PATHS.append(img_path)
+
     sift = cv2.xfeatures2d.SIFT_create(nfeatures=0, nOctaveLayers=3, contrastThreshold=0.014, edgeThreshold=10, sigma=0.27)
     descriptor_filename = "descriptor" + str(step_size)
     # Get All Local Feature Descriptors
@@ -89,50 +93,16 @@ if __name__ == "__main__":
                     + os.path.join(CACHE, train_bow_path + ".npy") + "\n")
         sys.exit(1)
 
-
-    val_bow_path = "valbow_" + kmeans_model_path
-    # Get Validation Data Bag of Words
-    if os.path.exists(os.path.join(CACHE, val_bow_path + ".npy")):
-        val_histograms = np.load(os.path.join(CACHE, val_bow_path + ".npy"))
-    else:
-        sys.stderr.write("Training Data BoW not found at " 
-                    + os.path.join(CACHE, val_bow_path + ".npy") + "\n")
-        sys.exit(1)
-
-    true_classes = []
-    predicted_classes = []
     # K-Nearest Neighbors
-    if k_means > 64:
-        index = 0
-        mAP = 0
-        for val_img in VAL_IMAGE_PATHS:
-            distances = np.square(train_histograms-val_histograms[index]).sum(axis=1)
-            idx = np.argpartition(distances, knn)
-            correct_class = val_img.split("/")[-2]
-            prediction = predict(TRAIN_IMAGE_PATHS, idx[:knn])
-            if prediction == correct_class:
-                mAP += 1
-            index += 1
-            true_classes.append(correct_class)
-            predicted_classes.append(prediction)
-    else:
-        L2_distances = np.square(train_histograms[:, None] - val_histograms).sum(axis=2).T
-        index = 0
-        mAP = 0
-        for val_img in VAL_IMAGE_PATHS:
-            distances = L2_distances[index]
-            idx = np.argpartition(distances, knn)
-            correct_class = val_img.split("/")[-2]
-            prediction = predict(TRAIN_IMAGE_PATHS, idx[:knn])
-            if prediction == correct_class:
-                mAP += 1
-            index += 1
-            true_classes.append(correct_class)
-            predicted_classes.append(prediction)
+    for test_img in TEST_IMAGE_PATHS:
+        des = fe.extract_feature(sift, test_img, step_size)
+        try:
+            hist, _ = np.histogram(kmeans.predict(des), bins=range(k_means+1), normed=True)
+        except ValueError:
+            des = fe.extract_feature(sift, test_img, 16)
+            hist, _ = np.histogram(kmeans.predict(des), bins=range(k_means+1), normed=True)
+        distances = np.square(train_histograms-hist).sum(axis=1)
+        idx = np.argpartition(distances, knn)
+        prediction = predict(TRAIN_IMAGE_PATHS, idx[:knn])
+        print(test_img.split("/")[-1] + ":", prediction)
 
-    print("mAP:", mAP/len(VAL_IMAGE_PATHS), "\n")
-    
-    # Confusion Matrix
-    confusion_matrix_title = "Accuraccy=" + str(mAP/len(VAL_IMAGE_PATHS)) + " (k-Means:" + str(k_means) + " StepSize:" + str(step_size) + " k-NN:" + str(knn) + ")"
-    cm.plot_confusion_matrix(true_classes, predicted_classes, CLASS_NAMES, title=confusion_matrix_title)
-    plt.show()

@@ -4,6 +4,7 @@ date > out.txt
 
 for kmeans in {16,32,64,128} ; do
     for step_size in {0,2,3,4,7,15} ; do
+            python3 k_means_clustering.py dataset/ $kmeans $step_size >> out.txt
         for knn in {1,2,4,16} ; do
             echo $kmeans $step_size $knn >> out.txt
             python3 k_nearest_neighbors.py dataset/ $kmeans $step_size $knn >> out.txt
