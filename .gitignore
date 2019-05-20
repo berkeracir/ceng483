@@ -1,0 +1,7 @@
+*.vscode
+*cache*
+*dataset*
+*.aux
+*.log
+*.out
+*.synctex.gz
