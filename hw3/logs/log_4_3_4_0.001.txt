@@ -1,0 +1,143 @@
+device: cuda
+training begins
+Saving the model, end of epoch 1 with train-loss: 0.190572
+Saving the model, end of epoch 2 with train-loss: 0.169343
+Saving the model, end of epoch 3 with train-loss: 0.155698
+Saving the model, end of epoch 4 with train-loss: 0.146913
+Train-loss: 0.141127
+Validation-loss: 0.136491
+Saving the model, end of epoch 5 with train-loss: 0.141127
+Saving the model, end of epoch 6 with train-loss: 0.137354
+Saving the model, end of epoch 7 with train-loss: 0.134840
+Saving the model, end of epoch 8 with train-loss: 0.133299
+Saving the model, end of epoch 9 with train-loss: 0.132104
+Train-loss: 0.131463
+Validation-loss: 0.128439
+Saving the model, end of epoch 10 with train-loss: 0.131463
+Saving the model, end of epoch 11 with train-loss: 0.130993
+Saving the model, end of epoch 12 with train-loss: 0.130692
+Saving the model, end of epoch 13 with train-loss: 0.130499
+Saving the model, end of epoch 14 with train-loss: 0.130360
+Train-loss: 0.130288
+Validation-loss: 0.127373
+Saving the model, end of epoch 15 with train-loss: 0.130288
+Saving the model, end of epoch 16 with train-loss: 0.130180
+Saving the model, end of epoch 17 with train-loss: 0.130152
+Saving the model, end of epoch 18 with train-loss: 0.130126
+Saving the model, end of epoch 19 with train-loss: 0.130124
+Train-loss: 0.130075
+Validation-loss: 0.127217
+Saving the model, end of epoch 20 with train-loss: 0.130075
+Saving the model, end of epoch 21 with train-loss: 0.130102
+Saving the model, end of epoch 22 with train-loss: 0.130070
+Saving the model, end of epoch 23 with train-loss: 0.130121
+Saving the model, end of epoch 24 with train-loss: 0.130107
+Train-loss: 0.130110
+Validation-loss: 0.127185
+Saving the model, end of epoch 25 with train-loss: 0.130110
+Saving the model, end of epoch 26 with train-loss: 0.130077
+Saving the model, end of epoch 27 with train-loss: 0.130090
+Saving the model, end of epoch 28 with train-loss: 0.130041
+Saving the model, end of epoch 29 with train-loss: 0.130106
+Train-loss: 0.130103
+Validation-loss: 0.127176
+Saving the model, end of epoch 30 with train-loss: 0.130103
+Saving the model, end of epoch 31 with train-loss: 0.130099
+Saving the model, end of epoch 32 with train-loss: 0.130107
+Saving the model, end of epoch 33 with train-loss: 0.130049
+Saving the model, end of epoch 34 with train-loss: 0.130059
+Train-loss: 0.130090
+Validation-loss: 0.127171
+Saving the model, end of epoch 35 with train-loss: 0.130090
+Saving the model, end of epoch 36 with train-loss: 0.130100
+Saving the model, end of epoch 37 with train-loss: 0.130094
+Saving the model, end of epoch 38 with train-loss: 0.130071
+Saving the model, end of epoch 39 with train-loss: 0.130060
+Train-loss: 0.130078
+Validation-loss: 0.127165
+Saving the model, end of epoch 40 with train-loss: 0.130078
+Saving the model, end of epoch 41 with train-loss: 0.130035
+Saving the model, end of epoch 42 with train-loss: 0.130032
+Saving the model, end of epoch 43 with train-loss: 0.130060
+Saving the model, end of epoch 44 with train-loss: 0.130099
+Train-loss: 0.130045
+Validation-loss: 0.127155
+Saving the model, end of epoch 45 with train-loss: 0.130045
+Saving the model, end of epoch 46 with train-loss: 0.130059
+Saving the model, end of epoch 47 with train-loss: 0.130096
+Saving the model, end of epoch 48 with train-loss: 0.130059
+Saving the model, end of epoch 49 with train-loss: 0.129997
+Train-loss: 0.130061
+Validation-loss: 0.127128
+Saving the model, end of epoch 50 with train-loss: 0.130061
+Saving the model, end of epoch 51 with train-loss: 0.130043
+Saving the model, end of epoch 52 with train-loss: 0.130006
+Saving the model, end of epoch 53 with train-loss: 0.129946
+Saving the model, end of epoch 54 with train-loss: 0.129936
+Train-loss: 0.129911
+Validation-loss: 0.127016
+Saving the model, end of epoch 55 with train-loss: 0.129911
+Saving the model, end of epoch 56 with train-loss: 0.129888
+Saving the model, end of epoch 57 with train-loss: 0.129849
+Saving the model, end of epoch 58 with train-loss: 0.129718
+Saving the model, end of epoch 59 with train-loss: 0.129550
+Train-loss: 0.129303
+Validation-loss: 0.126215
+Saving the model, end of epoch 60 with train-loss: 0.129303
+Saving the model, end of epoch 61 with train-loss: 0.128856
+Saving the model, end of epoch 62 with train-loss: 0.128191
+Saving the model, end of epoch 63 with train-loss: 0.127047
+Saving the model, end of epoch 64 with train-loss: 0.125181
+Train-loss: 0.121924
+Validation-loss: 0.116921
+Saving the model, end of epoch 65 with train-loss: 0.121924
+Saving the model, end of epoch 66 with train-loss: 0.117019
+Saving the model, end of epoch 67 with train-loss: 0.109637
+Saving the model, end of epoch 68 with train-loss: 0.099644
+Saving the model, end of epoch 69 with train-loss: 0.087830
+Train-loss: 0.076051
+Validation-loss: 0.068007
+Saving the model, end of epoch 70 with train-loss: 0.076051
+Saving the model, end of epoch 71 with train-loss: 0.065801
+Saving the model, end of epoch 72 with train-loss: 0.057657
+Saving the model, end of epoch 73 with train-loss: 0.051520
+Saving the model, end of epoch 74 with train-loss: 0.046839
+Train-loss: 0.043253
+Validation-loss: 0.040404
+Saving the model, end of epoch 75 with train-loss: 0.043253
+Saving the model, end of epoch 76 with train-loss: 0.040506
+Saving the model, end of epoch 77 with train-loss: 0.038350
+Saving the model, end of epoch 78 with train-loss: 0.036603
+Saving the model, end of epoch 79 with train-loss: 0.035174
+Train-loss: 0.033991
+Validation-loss: 0.032617
+Saving the model, end of epoch 80 with train-loss: 0.033991
+Saving the model, end of epoch 81 with train-loss: 0.032968
+Saving the model, end of epoch 82 with train-loss: 0.032058
+Saving the model, end of epoch 83 with train-loss: 0.031254
+Saving the model, end of epoch 84 with train-loss: 0.030549
+Train-loss: 0.029902
+Validation-loss: 0.029057
+Saving the model, end of epoch 85 with train-loss: 0.029902
+Saving the model, end of epoch 86 with train-loss: 0.029341
+Saving the model, end of epoch 87 with train-loss: 0.028776
+Saving the model, end of epoch 88 with train-loss: 0.028286
+Saving the model, end of epoch 89 with train-loss: 0.027841
+Train-loss: 0.027391
+Validation-loss: 0.026802
+Saving the model, end of epoch 90 with train-loss: 0.027391
+Saving the model, end of epoch 91 with train-loss: 0.026995
+Saving the model, end of epoch 92 with train-loss: 0.026625
+Saving the model, end of epoch 93 with train-loss: 0.026281
+Saving the model, end of epoch 94 with train-loss: 0.025952
+Train-loss: 0.025658
+Validation-loss: 0.025220
+Saving the model, end of epoch 95 with train-loss: 0.025658
+Saving the model, end of epoch 96 with train-loss: 0.025379
+Saving the model, end of epoch 97 with train-loss: 0.025104
+Saving the model, end of epoch 98 with train-loss: 0.024866
+Saving the model, end of epoch 99 with train-loss: 0.024613
+Train-loss: 0.024379
+Validation-loss: 0.024059
+Saving the model, end of epoch 100 with train-loss: 0.024379
+Finished Training with Validation Loss: 0.024059
