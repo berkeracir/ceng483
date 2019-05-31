@@ -25,6 +25,13 @@ lr = float(sys.argv[4])
 padding = int(kernel_size/2)
 MODEL_DIR = 'models'
 model_name = "%d_%d_%d_%s" % (layers, kernel_size, channel, sys.argv[4])
+BATCH_NORMALIZATION = False
+TANH = False
+
+if BATCH_NORMALIZATION:
+    model_name += "_bn"
+if TANH:
+    model_name += "_tanh"
 
 # ---- options ----
 DEVICE_ID = 'cuda' # set to 'cpu' for cpu, 'cuda' / 'cuda:0' or similar for gpu.
@@ -68,6 +75,22 @@ class Net1Layer(nn.Module):
     def forward(self, grayscale_image):
         # apply your network's layers in the following lines:      
         x = self.conv1(grayscale_image)
+        if TANH:
+            x = F.tanh(x)
+        return x
+
+class Net1LayerBN(nn.Module):
+    def __init__(self):
+        super(Net1LayerBN, self).__init__()
+        self.conv1 = nn.Conv2d(1, 3, kernel_size, padding=padding)
+        self.bn1 = nn.BatchNorm2d(3)
+
+    def forward(self, grayscale_image):
+        # apply your network's layers in the following lines:      
+        x = self.conv1(grayscale_image)
+        x = self.bn1(x)
+        if TANH:
+            x = F.tanh(x)
         return x
 
 class Net2Layer(nn.Module):
@@ -80,6 +103,26 @@ class Net2Layer(nn.Module):
         # apply your network's layers in the following lines:      
         x = F.relu(self.conv1(grayscale_image))
         x = self.conv2(x)
+        if TANH:
+            x = F.tanh(x)
+        return x
+
+class Net2LayerBN(nn.Module):
+    def __init__(self):
+        super(Net2LayerBN, self).__init__()
+        self.conv1 = nn.Conv2d(1, channel, kernel_size, padding=padding)
+        self.bn1 = nn.BatchNorm2d(channel)
+        self.conv2 = nn.Conv2d(channel, 3, kernel_size, padding=padding)
+        self.bn2 = nn.BatchNorm2d(3)
+
+    def forward(self, grayscale_image):
+        # apply your network's layers in the following lines:      
+        x = F.relu(self.conv1(grayscale_image))
+        x = self.bn1(x)
+        x = self.conv2(x)
+        x = self.bn2(x)
+        if TANH:
+            x = F.tanh(x)
         return x
 
 class Net4Layer(nn.Module):
@@ -96,17 +139,54 @@ class Net4Layer(nn.Module):
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
         x = self.conv4(x)
+        if TANH:
+            x = F.tanh(x)
+        return x
+
+class Net4LayerBN(nn.Module):
+    def __init__(self):
+        super(Net4LayerBN, self).__init__()
+        self.conv1 = nn.Conv2d(1, channel, kernel_size, padding=padding)
+        self.bn1 = nn.BatchNorm2d(channel)
+        self.conv2 = nn.Conv2d(channel, channel, kernel_size, padding=padding)  
+        self.bn2 = nn.BatchNorm2d(channel)
+        self.conv3 = nn.Conv2d(channel, channel, kernel_size, padding=padding) 
+        self.bn3 = nn.BatchNorm2d(channel) 
+        self.conv4 = nn.Conv2d(channel, 3, kernel_size, padding=padding)
+        self.bn4 = nn.BatchNorm2d(3)
+
+    def forward(self, grayscale_image):
+        # apply your network's layers in the following lines:      
+        x = self.conv1(grayscale_image)
+        x = F.relu(self.bn1(x))
+        x = self.conv2(x)
+        x = F.relu(self.bn2(x))
+        x = self.conv3(x)
+        x = F.relu(self.bn3(x))
+        x = self.conv4(x)
+        x = self.bn4(x)
+        if TANH:
+            x = F.tanh(x)
         return x
 
 # ---- training code -----
 device = torch.device(DEVICE_ID)
 print('device: ' + str(device))
 if layers == 1:
-    net = Net1Layer().to(device=device)
+    if BATCH_NORMALIZATION:
+        net = Net1LayerBN().to(device=device)
+    else:
+        net = Net1Layer().to(device=device)
 elif layers == 2:
-    net = Net2Layer().to(device=device)
+    if BATCH_NORMALIZATION:
+        net = Net2LayerBN().to(device=device)
+    else:
+        net = Net2Layer().to(device=device)
 elif layers == 4:
-    net = Net4Layer().to(device=device)
+    if BATCH_NORMALIZATION:
+        net = Net4LayerBN().to(device=device)
+    else:
+        net = Net4Layer().to(device=device)
 else:
     sys.stderr.write("UNSUPPORTED LAYER COUNT: %d\n" % (layers))
     exit(-1)
@@ -150,7 +230,6 @@ for epoch in range(max_num_epoch):
     if epoch % 5 == 4:
         with torch.no_grad():
             val_loss = 0.0 # validation loss of the network
-            err_loss = 0.0
             for data in val_loader:
                 inputs, targets = data # inputs: low-resolution images, targets: high-resolution images.
 
@@ -159,9 +238,6 @@ for epoch in range(max_num_epoch):
                 loss = criterion(preds, targets)
                 val_loss += loss.item()
 
-                err = margin12Error(preds, targets)
-                err_loss += err
-
             val_loss = val_loss / len(val_loader)
             if (val_loss <= best_val_loss):
                 best_val_loss = val_loss
@@ -169,7 +245,7 @@ for epoch in range(max_num_epoch):
                     os.makedirs(MODEL_DIR)
                 torch.save(net.state_dict(), os.path.join(MODEL_DIR,'conv_%s.model' % (model_name)))
             print('Train-loss: %f' % (running_loss))
-            print('Validation-loss: %f (%f)' % (val_loss, err_loss))
+            print('Validation-loss: %f' % (val_loss))
 
     print('Saving the model, end of epoch %d with train-loss: %f' % (epoch+1, running_loss))
     if not os.path.exists(LOG_DIR):
