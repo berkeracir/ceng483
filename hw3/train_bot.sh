@@ -26,12 +26,11 @@ mkdir -p ./logs
 # echo 2 5 4 0.1
 # python train.py 2 5 4 0.1 > ./logs/log_2_5_4_0.1_tanh.txt
 
-layers=16
-for kernel_size in {3,5} ; do
-    for channels in {4,8} ; do
+for layers in {2,4} ; do
+    for kernel_size in {3,5} ; do
+        channels=16
         learning_rate=0.1
         echo "Training: $layers $kernel_size $channels $learning_rate"
         python train.py $layers $kernel_size $channels $learning_rate > ./logs/log_"$layers"_"$kernel_size"_"$channels"_"$learning_rate".txt
-
     done
 done
