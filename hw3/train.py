@@ -26,7 +26,7 @@ padding = int(kernel_size/2)
 MODEL_DIR = 'models'
 model_name = "%d_%d_%d_%s" % (layers, kernel_size, channel, sys.argv[4])
 BATCH_NORMALIZATION = False
-TANH = False
+TANH = True
 
 if BATCH_NORMALIZATION:
     model_name += "_bn"
@@ -199,6 +199,7 @@ if LOAD_CHKPT:
     net.load_state_dict(os.path.join(LOG_DIR,'checkpoint.pt'))
 
 best_val_loss = float('Inf')
+best_epoch = -1
 
 print('training begins')
 for epoch in range(max_num_epoch):  
@@ -227,9 +228,10 @@ for epoch in range(max_num_epoch):
         #    hw3utils.visualize_batch(inputs,preds,targets)
     running_loss = running_loss / len(train_loader)
 
-    if epoch % 5 == 4:
+    if True: #epoch % 5 == 4:
         with torch.no_grad():
             val_loss = 0.0 # validation loss of the network
+            margin_error = 0.0
             for data in val_loader:
                 inputs, targets = data # inputs: low-resolution images, targets: high-resolution images.
 
@@ -237,25 +239,32 @@ for epoch in range(max_num_epoch):
                 preds = net(inputs)
                 loss = criterion(preds, targets)
                 val_loss += loss.item()
+                #v1 = torch.abs(torch.sub(preds, targets) > 12.0/255.0).sum().to(dtype=torch.float)
+                #v2 = float(preds.reshape(-1).shape[0])
+                margin_error +=  torch.abs(torch.sub(preds, targets) > 12.0/255.0).sum().to(dtype=torch.float) / float(preds.reshape(-1).shape[0])
+
 
             val_loss = val_loss / len(val_loader)
+            margin_error = margin_error / len(val_loader)
             if (val_loss <= best_val_loss):
                 best_val_loss = val_loss
+                best_epoch = epoch + 1
                 if not os.path.exists(MODEL_DIR):
                     os.makedirs(MODEL_DIR)
                 torch.save(net.state_dict(), os.path.join(MODEL_DIR,'conv_%s.model' % (model_name)))
             elif (val_loss > best_val_loss*3):
                 print('Force end of training at epoch: %d (%f|%f)' % (epoch+1, val_loss, best_val_loss))
                 break
-            print('Train-loss: %f' % (running_loss))
-            print('Validation-loss: %f' % (val_loss))
+            print('[%3d]\tTrain-loss: %f\tValidation-loss: %f\t12Margin-error: %f' % (epoch+1, running_loss, val_loss, margin_error))
+            #print('Validation-loss: %f' % (val_loss))
+            #print('12Margin-error: %f' % (margin_error))
 
-    print('Saving the model, end of epoch %d with train-loss: %f' % (epoch+1, running_loss))
+    #print('Saving the model, end of epoch %d with train-loss: %f' % (epoch+1, running_loss))
     if not os.path.exists(LOG_DIR):
         os.makedirs(LOG_DIR)
     torch.save(net.state_dict(), os.path.join(LOG_DIR,'model_%s.pt' % (model_name)))
     hw3utils.visualize_batch(inputs,preds,targets,os.path.join(LOG_DIR,'model_%s.png' % (model_name)))
 
-print('Finished Training with Validation Loss: %f' % (best_val_loss))
+print('Finished Training with Minimum Validation Loss: %f at Epoch: %d' % (best_val_loss, best_epoch + 1))
 
 

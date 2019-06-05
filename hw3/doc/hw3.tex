@@ -316,120 +316,224 @@ Please fill in the sections below only with the requested information. If you ha
     
     \begin{itemize}
         \item Try adding a batch-norm layer (torch.nn.BatchNorm2d) into each convolutional layer. How does it affect the results, and, why? Keep it if it is beneficial. 
-        
-		\begin{minipage}{\textwidth}
-			\centering
-			\begin{tikzpicture}
-			    \begin{axis}
-			        [
-			        ,xlabel=Model
-			        ,ylabel=Validation Loss
-			        ,yticklabel style={/pgf/number format/fixed}
-			        ,xtick=data
-			        ,xticklabels={I, II, III, IV}
-			        ,legend style={at={(0.98, 0.50)},anchor=east}
-			        ,smooth
-			        ,thick
-			        ,mark=*
-			        ]
-   					\addlegendimage{empty legend}
-			        \addplot+[smooth] coordinates
-			        {(0,0.008267) (1,0.008289) (2,0.008308) (3,0.008385)};
-			        \addplot+[smooth] coordinates
-			        {(0,0.012251) (1,0.012450) (2,0.012366) (3,0.012373)};
-			        \addlegendentry{\hspace{-.7cm}\textbf{Models}};
-   					\addlegendentry{without batch-norm layer}
-   					\addlegendentry{with batch-norm layer}
-			    \end{axis}
-			\end{tikzpicture}
-			\captionsetup{width=.8\textwidth}
-			\captionof{figure}{Comparison of the best models with and without batch normalization layer after every convolutional layer in terms of validation loss}
-		 \end{minipage}
-		 
-		 I have added batch-norm layer after ReLU activation function. I've also tested adding batch-norm layer before ReLU activation function. Applying batch-norm layer after ReLU has achieved validation loss 0.012251 whereas applying it before ReLU has achieved validation loss 0.012328. \\
+
+		\begin{minipage}{.95\textwidth}
+			\begin{minipage}{.45\textwidth}
+				\centering
+				\begin{tikzpicture}
+				    \begin{axis}
+				        [
+				        ,xlabel=Model
+				        ,ylabel=Validation Loss
+				        ,yticklabel style={/pgf/number format/fixed}
+				        ,xtick=data
+				        ,xticklabels={I, II, III, IV}
+				        ,legend style={at={(0.98, 0.50)},anchor=east}
+				        ,smooth
+				        ,thick
+				        ,mark=*
+				        ]
+	   					\addlegendimage{empty legend}
+				        \addplot+[smooth] coordinates
+				        {(0,0.008267) (1,0.008289) (2,0.008308) (3,0.008385)};
+				        \addplot+[smooth] coordinates
+				        {(0,0.012251) (1,0.012450) (2,0.012366) (3,0.012373)};
+				        \addlegendentry{\hspace{-.7cm}\textbf{Models}};
+	   					\addlegendentry{without batch-norm layer}
+	   					\addlegendentry{with batch-norm layer}
+				    \end{axis}
+				\end{tikzpicture}
+				\captionsetup{width=1.\textwidth}
+				\captionof{figure}{Comparison of the best models with and without batch normalization layer after every convolutional layer in terms of validation loss}
+			 \end{minipage}
+			 \hfill
+			\begin{minipage}{0.45\textwidth}
+				I have added batch-norm layer after ReLU activation function. I've also tested adding batch-norm layer before ReLU activation function. Applying batch-norm layer after ReLU has achieved validation loss 0.012251 whereas applying it before ReLU has achieved validation loss 0.012328. \\
 		 In terms of validation loss, adding batch-normalization layer seems to be unnecessary as it increases the validation loss. Our dataset is already in range $[-1,1]$. Therefore, normalization might be unnecessary for the input layer as the input is already in normalized shape; however, batch-normalization layer might be useful for the following layers. The current models tend to output broken or sharp pixels due to lack of activation layer in the last layer. Batch-normalization layer can reduce the number of those pixels. Yet, it might not be sufficient for that problem.
+			\end{minipage}
+		\end{minipage} \\
 
         \item Try adding a tanh activation function after the very last convolutional layer. How does it affect the results, and, why? Keep it if it is beneficial. 
         
-		\begin{minipage}{\textwidth}
-			\centering
-			\begin{tikzpicture}
-			    \begin{axis}
-			        [
-			        ,xlabel=Model
-			        ,ylabel=Validation Loss
-			        ,yticklabel style={/pgf/number format/fixed}
-			        ,xtick=data
-			        ,xticklabels={I, II, III, IV}
-			        ,legend style={at={(0.02, 0.98)},anchor=north west}
-			        ,smooth
-			        ,thick
-			        ,mark=*
-			        ]
-   					\addlegendimage{empty legend}
-			        \addplot+[smooth] coordinates
-			        {(0,0.008267) (1,0.008289) (2,0.008308) (3,0.008385)};
-			        \addplot+[smooth] coordinates
-			        {(0,0.008483) (1,0.008448) (2,0.008514) (3,0.008578)};
-			        \addlegendentry{\hspace{-.7cm}\textbf{Models}};
-   					\addlegendentry{without tanh}
-   					\addlegendentry{with tanh}
-			    \end{axis}
-			\end{tikzpicture}
-			\captionsetup{width=.8\textwidth}
-			\captionof{figure}{Comparison of the best models with and without tanh activation function after the very last convolutional layer in terms of validation loss}
-		 \end{minipage}
-		 
-		 It doesn't affect the models in a good way as the models' validation losses are not decreased. However, it improves the outputs of models even though it doesn't reduce the validation losses. There is nothing after the last layer, so our model technically doesn't map $[-1,1]^{2}$ to $[-1,1]^{2}$ because the last layer has no activation function. Therefore, current models do $[-1,1]^{2}\rightarrow[-\infty,\infty]^{2}$. Due to lack of activation function after the last layer, the models' outputs have broken or sharp pixels. tanh activation function prevents this from happening. \\
+		\begin{minipage}{.95\textwidth}
+			\begin{minipage}{0.45\textwidth}
+				\centering
+				\begin{tikzpicture}
+				    \begin{axis}
+				        [
+				        ,xlabel=Model
+				        ,ylabel=Validation Loss
+				        ,yticklabel style={/pgf/number format/fixed}
+				        ,xtick=data
+				        ,xticklabels={I, II, III, IV}
+				        ,legend style={at={(0.02, 0.98)},anchor=north west}
+				        ,smooth
+				        ,thick
+				        ,mark=*
+				        ]
+	   					\addlegendimage{empty legend}
+				        \addplot+[smooth] coordinates
+				        {(0,0.008267) (1,0.008289) (2,0.008308) (3,0.008385)};
+				        \addplot+[smooth] coordinates
+				        {(0,0.008483) (1,0.008448) (2,0.008514) (3,0.008578)};
+				        \addlegendentry{\hspace{-.7cm}\textbf{Models}};
+	   					\addlegendentry{without tanh}
+	   					\addlegendentry{with tanh}
+				    \end{axis}
+				\end{tikzpicture}
+				\captionsetup{width=1.\textwidth}
+				\captionof{figure}{Comparison of the best models with and without tanh activation function after the very last convolutional layer in terms of validation loss}
+			\end{minipage}
+			 \hfill
+			\begin{minipage}{0.45\textwidth}
+				It doesn't affect the models in a good way as the models' validation losses are not decreased. However, it improves the outputs of models even though it doesn't reduce the validation losses. There is nothing after the last layer, so our model technically doesn't map $[-1,1]^{2}$ to $[-1,1]^{2}$ because the last layer has no activation function. Therefore, current models do $[-1,1]^{2}\rightarrow[-\infty,\infty]^{2}$. Due to lack of activation function after the last layer, the models' outputs have broken or sharp pixels. tanh activation function prevents this from happening. \\
 		 I used mean square error (MSE) as loss function when training the models. It might be the reason for broken/sharp pixels in the outputs. If I used 12-margin error as loss function, broken/sharp pixel problem might be fixed.
-		 
-		 EXAMPLE EXAMPLE EXAMPLE EXAMPLE EXAMPLE EXAMPLE EXAMPLE EXAMPLE
+			\end{minipage}
+		\end{minipage} \\        
+        
         
         \item Try setting the number of channels parameter to 16. How does it affect the results, and, why? Keep it if it is beneficial. 
         
-		\begin{minipage}{\textwidth}
+		\begin{minipage}{.95\textwidth}
+			\begin{minipage}{0.45\textwidth}
+				\centering
+				\begin{tikzpicture}
+				    \begin{axis}
+				        [
+				        ,xlabel=Model
+				        ,ylabel=Validation Loss
+				        ,yticklabel style={/pgf/number format/fixed}
+				        ,xtick=data
+				        ,xticklabels={I, II, III, IV}
+				        ,legend style={at={(0.02, 0.98)},anchor=north west}
+				        ,smooth
+				        ,thick
+				        ,mark=*
+				        ]
+	   					\addlegendimage{empty legend}
+				        \addplot+[smooth] coordinates
+				        {(0,0.008267) (1,0.008289) (2,0.008308) (3,0.008385)};
+				        \addplot+[smooth] coordinates
+				        {(0,0.008175) (1,0.008267) (2,0.008260) (3,0.008175)};
+				        \addlegendentry{\hspace{-.7cm}\textbf{Models}};
+	   					\addlegendentry{not 16 channels}
+	   					\addlegendentry{16 channels}
+				    \end{axis}
+				\end{tikzpicture}
+				\captionsetup{width=1.\textwidth}
+				\captionof{figure}{Comparison of the best models and their 16 channel versions in terms of validation loss}
+			\end{minipage}
+			 \hfill
+			\begin{minipage}{0.45\textwidth}
+				16 channel counterpart of model I and IV is same because rest of the hyperparameters are identical. In terms of validation loss, having 16 channel kernels rather than 2, 4 or 8 channels is better because having more channels means new capabilities, more feature extraction/learning. Therefore, models with 16 channels have had lesser validation loss than their counterparts.
+			\end{minipage}
+		\end{minipage} \\
+		
+		\pagebreak
+
+	    \item[\textbf{-}] Broken/Sharp pixel problem in outputs and above experiments:
+		    \begin{figure}[!h]
+				\centering
+				\includegraphics[width=1.0\textwidth]{p2_comparison.png}
+				\caption{Outputs from different models with same input: \textbf{(a)} Model I, \textbf{(b)} Model I with Batch-Normalization, \textbf{(c)} Model I with tanh activation fuction, \textbf{(d)} Model I with 16 channels instead of 8 channels}
+			\end{figure}
+        
+    \end{itemize}
+\section{Your Best Configuration (20 pts)}
+My best configuration is \textbf{2 convolutional layers}, \textbf{kernel size 5}, \textbf{16 channels in kernels}, \textbf{learning rate 0.1} with \textbf{tanh} activation function after the last convolutional layer.
+ 
+    \begin{itemize}
+        \item The automatically chosen number of epochs(what was your strategy?):
+        
+		I have ended the training process if the latest validation loss is greater than the three times of the minimum validation loss. I have also saved the model with minimum validation losses. Therefore, I will have the best trained model saved even though the training process is finished due to extreme increase in validation loss. In this way, training phase is terminated when the model is overfitting. However, I haven't came upon termination of the training. Maybe, thats reason is that I do get the validation loss at every 5 epoch in order to fasten the training process.
+        
+        \item The plot of the training mean-squared error loss over epochs:
+		 
+		 \begin{minipage}{.9\textwidth}
+			\begin{minipage}{.44\textwidth}
+				\centering
+				\begin{tikzpicture}
+				    \begin{axis}
+				        [
+				        ,xlabel=Epoch
+				        ,ylabel=Training Loss
+				        ,yticklabel style={/pgf/number format/fixed}
+				        ,legend style={anchor=north east}
+				        ,smooth
+				        ,thick
+				        ,mark=*
+				        ]
+				        \addplot[smooth,blue] coordinates
+				        {(1,0.015407) (2,0.010995) (3,0.010296) (4,0.009859) (5,0.009526) (6,0.009290) (7,0.009133) (8,0.009024) (9,0.008895) (10,0.008852) (11,0.008790) (12,0.008744) (13,0.008679) (14,0.008672) (15,0.008619) (16,0.008577) (17,0.008545) (18,0.008534) (19,0.008515) (20,0.008468) (21,0.008452) (22,0.008461) (23,0.008430) (24,0.008423) (25,0.008393) (26,0.008370) (27,0.008374) (28,0.008376) (29,0.008347) (30,0.008330) (31,0.008320) (32,0.008319) (33,0.008302) (34,0.008305) (35,0.008298) (36,0.008282) (37,0.008262) (38,0.008277) (39,0.008272) (40,0.008253) (41,0.008267) (42,0.008260) (43,0.008244) (44,0.008246) (45,0.008241) (46,0.008240) (47,0.008211) (48,0.008204) (49,0.008212) (50,0.008214) (51,0.008207) (52,0.008205) (53,0.008217) (54,0.008198) (55,0.008215) (56,0.008192) (57,0.008198) (58,0.008180) (59,0.008194) (60,0.008180) (61,0.008181) (62,0.008177) (63,0.008177) (64,0.008160) (65,0.008176) (66,0.008156) (67,0.008157) (68,0.008163) (69,0.008160) (70,0.008152) (71,0.008145) (72,0.008150) (73,0.008146) (74,0.008145) (75,0.008138) (76,0.008127) (77,0.008115) (78,0.008176) (79,0.008136) (80,0.008136) (81,0.008137) (82,0.008127) (83,0.008116) (84,0.008142) (85,0.008133) (86,0.008127) (87,0.008130) (88,0.008112) (89,0.008124) (90,0.008132) (91,0.008116) (92,0.008115) (93,0.008109) (94,0.008109) (95,0.008115) (96,0.008123) (97,0.008118) (98,0.008122) (99,0.008108) (100,0.008101)};
+				    \end{axis}
+				\end{tikzpicture}
+				\captionsetup{width=1.\textwidth}
+				\captionof{figure}{Mean-Squared Error Loss of Training Data over 100 Epochs}
+		 	\end{minipage}
+			\hfill
+			\begin{minipage}{.44\textwidth}
+				\centering
+				\begin{tikzpicture}
+				    \begin{axis}
+				        [
+				        ,xlabel=Epoch
+				        ,ylabel=Validation Loss
+				        ,yticklabel style={/pgf/number format/fixed}
+				        ,legend style={anchor=north east}
+				        ,smooth
+				        ,thick
+				        ,mark=*
+				        ]
+				        \addplot[smooth,red] coordinates
+				        {(1,0.011588) (2,0.010767) (3,0.010757) (4,0.009893) (5,0.009685) (6,0.009415) (7,0.009177) (8,0.009628) (9,0.008937) (10,0.009038) (11,0.008831) (12,0.009039) (13,0.008716) (14,0.008696) (15,0.008784) (16,0.008624) (17,0.008625) (18,0.008999) (19,0.008609) (20,0.008517) (21,0.008644) (22,0.008626) (23,0.008735) (24,0.008659) (25,0.008548) (26,0.008581) (27,0.008474) (28,0.008775) (29,0.008428) (30,0.008487) (31,0.008456) (32,0.008435) (33,0.008380) (34,0.008408) (35,0.008489) (36,0.008356) (37,0.008351) (38,0.008876) (39,0.008322) (40,0.008448) (41,0.008410) (42,0.008365) (43,0.008527) (44,0.008303) (45,0.008415) (46,0.008294) (47,0.008347) (48,0.008537) (49,0.008309) (50,0.008479) (51,0.008558) (52,0.008381) (53,0.008313) (54,0.008298) (55,0.008309) (56,0.008309) (57,0.008359) (58,0.008354) (59,0.008278) (60,0.008338) (61,0.008485) (62,0.008435) (63,0.008244) (64,0.008259) (65,0.008500) (66,0.008263) (67,0.008330) (68,0.008274) (69,0.008314) (70,0.008281) (71,0.008233) (72,0.008309) (73,0.008247) (74,0.008236) (75,0.008315) (76,0.008318) (77,0.008214) (78,0.008442) (79,0.008261) (80,0.008254) (81,0.008275) (82,0.008231) (83,0.008310) (84,0.008245) (85,0.008274) (86,0.008241) (87,0.008246) (88,0.008315) (89,0.008327) (90,0.008202) (91,0.008264) (92,0.008282) (93,0.008294) (94,0.008466) (95,0.008201) (96,0.008226) (97,0.008226) (98,0.008212) (99,0.008220) (100,0.008215)};
+				    \end{axis}
+				\end{tikzpicture}
+				\captionsetup{width=1.\textwidth}
+				\captionof{figure}{Mean-Squared Error Loss of Validation Data over 100 Epochs}
+		 	\end{minipage}
+		\end{minipage} \\
+        
+        \item The  plot  of  the  validation  12-margin  error  over  epochs:
+        
+        \begin{minipage}{1.\textwidth}
 			\centering
 			\begin{tikzpicture}
 			    \begin{axis}
 			        [
-			        ,xlabel=Model
-			        ,ylabel=Validation Loss
+			        ,xlabel=Epoch
+			        ,ylabel=12-Margin Error
 			        ,yticklabel style={/pgf/number format/fixed}
-			        ,xtick=data
-			        ,xticklabels={I, II, III, IV}
-			        ,legend style={at={(1.02, 0.50)},anchor=west}
+			        ,legend style={anchor=north east}
 			        ,smooth
 			        ,thick
 			        ,mark=*
 			        ]
-   					\addlegendimage{empty legend}
-			        \addplot+[smooth] coordinates
-			        {(0,0.008267) (1,0.008289) (2,0.008308) (3,0.008385)};
-			        \addplot+[smooth] coordinates
-			        {(0,0.008175) (1,0.008267) (2,0.008260) (3,0.008175)};
-			        \addlegendentry{\hspace{-.7cm}\textbf{Models}};
-   					\addlegendentry{not 16 channels}
-   					\addlegendentry{16 channels}
+			        \addplot[smooth,orange] coordinates
+			        {(1,0.273652) (2,0.272719) (3,0.273894) (4,0.249932) (5,0.285110) (6,0.247935) (7,0.271892) (8,0.283263) (9,0.256832) (10,0.249972) (11,0.267790) (12,0.253643) (13,0.263379) (14,0.244518) (15,0.255030) (16,0.252923) (17,0.263923) (18,0.229820) (19,0.258418) (20,0.250687) (21,0.262334) (22,0.244911) (23,0.283723) (24,0.255697) (25,0.257704) (26,0.254780) (27,0.248221) (28,0.254862) (29,0.243384) (30,0.264318) (31,0.256902) (32,0.238257) (33,0.256891) (34,0.236506) (35,0.266472) (36,0.250194) (37,0.251643) (38,0.292099) (39,0.244972) (40,0.266735) (41,0.264380) (42,0.245134) (43,0.251377) (44,0.252298) (45,0.258970) (46,0.236016) (47,0.254156) (48,0.245989) (49,0.250858) (50,0.261913) (51,0.211376) (52,0.259450) (53,0.265949) (54,0.232092) (55,0.252308) (56,0.242696) (57,0.269305) (58,0.266183) (59,0.253742) (60,0.267996) (61,0.255044) (62,0.252838) (63,0.249472) (64,0.235846) (65,0.261650) (66,0.246094) (67,0.245168) (68,0.257642) (69,0.265989) (70,0.258717) (71,0.236571) (72,0.248392) (73,0.237851) (74,0.245698) (75,0.250153) (76,0.224446) (77,0.236676) (78,0.247107) (79,0.255228) (80,0.244897) (81,0.249303) (82,0.250128) (83,0.239479) (84,0.221432) (85,0.265357) (86,0.245592) (87,0.243502) (88,0.266343) (89,0.259149) (90,0.239476) (91,0.257818) (92,0.242200) (93,0.262986) (94,0.268246) (95,0.245754) (96,0.235371) (97,0.234612) (98,0.245678) (99,0.259695) (100,0.230559)};
 			    \end{axis}
 			\end{tikzpicture}
-			\captionsetup{width=.52\textwidth}
-			\captionof{figure}{Comparison of the best models and their 16 channel versions in terms of validation loss}
-		 \end{minipage}
-		 
-		 16 channel counterpart of model I and IV is same because rest of the hyperparameters are identical. In terms of validation loss, having 16 channel kernels rather than 2, 4 or 8 channels is better because having more channels means new capabilities, more feature extraction/learning. Therefore, models with 16 channels have had lesser validation loss than their counterparts.  
+			\captionsetup{width=.9\textwidth}
+			\captionof{figure}{12-Margin Error Loss of Validation Data over 100 Epochs}
+	 	\end{minipage}
+	 	
+	 	\pagebreak
         
-    \end{itemize}
-
-
-\section{Your Best Configuration (20 pts)}
-Using the best model that you obtain, report the following:
- 
-    \begin{itemize}
-        \item The automatically chosen number of epochs(what was your strategy?):
-        \item The plot of the training mean-squared error loss over epochs:
-        \item The  plot  of  the  validation  12-margin  error  over  epochs (see the3 text for details):
         \item At least 5 qualitative results on the validation set, showing the prediction and the target colored image:
+        
+        \begin{figure}[!h]
+			\centering
+			\includegraphics[width=.7\textwidth]{p3_results.png}
+			\caption{6 qualitative results from the validation set}
+		\end{figure}
+        
+	 	\pagebreak
+	 	
         \item Discuss the advantages and disadvantages of the model, based on your qualitative results, and, briefly discuss potential ways to improve the model:
+        
+		The model currently achieves \textbf{0.008201 validation loss} and \textbf{0.211376 12-margin error} in the validation set. The model has still sharp pixels as it can be seen from the outputs in \textit{\textbf{Figure 12}}. Those are caused from the output of last convolutional layer whose value is greater than 1 or smaller than -1. It can be fixed with simple value cropping or tanh activation function after the last convolutional layer. However, the latter solution isn't preferable as it decreases the loss and 12-margin error values. \\
+		The model can be improved even more with increasing the number of kernel channels, better optimizers such as \textit{adam} or optimizing the parameters of SGD optimizer. Introducing new layers might also improve the model if it is used with combinations of different sized kernels. However, adding new layers hasn't improved the model in this homework. \\
+		The model can also be trained with more epochs and suitable learning rate with proper decay rate.
+        
     \end{itemize}
     
 \section{Your Results on the Test Set(30 pts)}
@@ -438,8 +542,6 @@ This part will be obtained by us using the estimations you will provide. Please 
 \section{Additional Comments and References}
 
     (if there any)
-
-
 
 
 
